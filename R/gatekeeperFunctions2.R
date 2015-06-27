@@ -1,8 +1,8 @@
-
+#here
 # customized function: added weight to the parallel gk
 
-# LevelProc is a secondary function which computes the significance level for 
-# the next family for multistage parallel gatekeeping procedures in hypothesis 
+# LevelProc is a secondary function which computes the significance level for
+# the next family for multistage parallel gatekeeping procedures in hypothesis
 # testing problems with equally weighted null hypotheses
 levelproc<-function(reject,proc,gamma,level)
   # REJECT, Vector of rejection decisions (1, if rejected; 0, if accepted)
@@ -16,7 +16,7 @@ levelproc<-function(reject,proc,gamma,level)
   a<-m-sum(reject)
   # Ratio of accepted hypotheses in the current family
   ratio<-a/m
-  
+
   if (ratio==0) error<-0
   if (ratio>0)
   {
@@ -44,7 +44,7 @@ levelproc<-function(reject,proc,gamma,level)
             }
             l<-largest
           }
-          
+
           # i is the smallest index
           if (smallest==1)
           {
@@ -57,29 +57,29 @@ levelproc<-function(reject,proc,gamma,level)
       }
     }
   }
-  
+
   # Significance level in the next family
   nextlevel<-level-error*level
   return(nextlevel)
 }
 # End of levelproc
 
-# ParGateEval is a secondary function which evaluates decision rules for 
-# multistage parallel gatekeeping procedures in hypothesis testing problems 
+# ParGateEval is a secondary function which evaluates decision rules for
+# multistage parallel gatekeeping procedures in hypothesis testing problems
 # with equally weighted null hypotheses
-pargateeval<-function(gateproc,alpha,independence)
+pargateeval<-function(gateproc,weight, alpha,independence)
   # GATEPROC, List of gatekeeping procedure parameters
   # ALPHA, Global familywise error rate
-  # INDEPENDENCE, Boolean indicator (TRUE, Independence condition is imposed; FALSE, 
+  # INDEPENDENCE, Boolean indicator (TRUE, Independence condition is imposed; FALSE,
   # Independence condition is not imposed)
 {
-  
+
   # Number of families
   nfams<-length(gateproc)
-  
+
   # Significance level in the first family
   level<-alpha
-  
+
   # Test families from first to last
   for(i in 1:nfams)
   {
@@ -87,9 +87,9 @@ pargateeval<-function(gateproc,alpha,independence)
     p<-gateproc[[i]]$rawp
     # Null hypotheses are equally weighted in the current family
     #w<-rep(1/length(p),length(p))
-    w <- gateproc[[i]]$weight
+    w <- weight[[i]]
     # Procedure and truncation parameter in the current family
-    if (gateproc[[i]]$proc=="Bonferroni") 
+    if (gateproc[[i]]$proc=="Bonferroni")
     {
       proc<-"Holm"
       gamma<-0
@@ -114,24 +114,24 @@ pargateeval<-function(gateproc,alpha,independence)
     # Compute the significance level in the next family
     level<-levelproc(rejection,proc,gamma,level)
   }
-  
-  # Retest families from last to first if the independence condition is not imposed    
-  if (independence==FALSE)    
-  {        
+
+  # Retest families from last to first if the independence condition is not imposed
+  if (independence==FALSE)
+  {
     for(i in (nfams+1):(2*nfams-1))
     {
       # Family index
-      k<-2*nfams-i     
-      prevrej<-gateproc[[i-1]][[7]]   
-      # Full alpha level if all null hypotheses are rejected in the previous family            
-      if (sum(prevrej)==length(prevrej)) level<-alpha else level<-0            
+      k<-2*nfams-i
+      prevrej<-gateproc[[i-1]][[7]]
+      # Full alpha level if all null hypotheses are rejected in the previous family
+      if (sum(prevrej)==length(prevrej)) level<-alpha else level<-0
       # Label in the current family
       label<-gateproc[[k]]$label
       # Raw p-values in the current family
       p<-gateproc[[k]]$rawp
       # Null hypotheses are equally weighted in the current family
       #w<-rep(1/length(p),length(p))
-      w <- gateproc[[i]]$weight
+      w <- weight[[i]]
       # Procedure in the current family
       if (gateproc[[k]]$proc=="Bonferroni") proc<-"Holm" else proc<-gateproc[[k]]$proc
       # Truncation parameter in the current family (regular procedure is used)
@@ -141,11 +141,11 @@ pargateeval<-function(gateproc,alpha,independence)
       # Rejection decisions in the current family (0 if rejected and 1 if accepted)
       rejection<-(adjp<=level)
       # Create a new list for the current family
-      gateproc[[i]]<-list(label=label, rawp=p, proc=proc, procpar=gamma, adjp=adjp, level=level, rejection=rejection)            
+      gateproc[[i]]<-list(label=label, rawp=p, proc=proc, procpar=gamma, adjp=adjp, level=level, rejection=rejection)
     }
   }
-  
+
   return(gateproc)
-  
+
 }
 # End of pargateeval

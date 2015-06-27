@@ -2,7 +2,9 @@
 # for multistage parallel gatekeeping procedures in hypothesis testing problems
 # with multiple families of null hypotheses (null hypotheses are assumed
 # to be equally weighted within each family)
-pargateadjp<-function(gateproc, independence, alpha=0.05, printDecisionRules=FALSE)
+
+# added weight
+pargateadjp<-function(gateproc, weight, independence, alpha=0.05, printDecisionRules=FALSE)
 # GATEPROC, List of gatekeeping procedure parameters
 # INDEPENDENCE, Boolean indicator (TRUE, Independence condition is imposed; FALSE,
 # Independence condition is not imposed)
@@ -43,7 +45,7 @@ pargateadjp<-function(gateproc, independence, alpha=0.05, printDecisionRules=FAL
 			{
 				current<-(lower+upper)/2
 				# Evaluate decision rules for the multistage parallel gatekeeping procedure
-				res<-pargateeval(temp,current,independence)
+				res<-pargateeval(temp,weight, current,independence)
 				# Rejection decision for the current null hypothesis
 				if (independence==TRUE | i==nfams) reject<-res[[i]][[7]][j]
 				# Rejection decisions after retesting if the independence condition is not imposed
@@ -89,7 +91,7 @@ pargateadjp<-function(gateproc, independence, alpha=0.05, printDecisionRules=FAL
 	names(result)[4]<-"Raw.pvalue"
 	names(result)[5]<-"Adj.pvalue"
 
-	if(printDecisionRules==TRUE) { pargaterule(gateproc,alpha,independence)}
+	if(printDecisionRules==TRUE) { pargaterule(gateproc,weight, alpha,independence)}
 
 	return(result=result)
 }

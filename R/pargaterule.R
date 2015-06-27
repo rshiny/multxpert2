@@ -2,7 +2,7 @@
 # gatekeeping procedures in hypothesis testing problems with multiple families
 # of null hypotheses (null hypotheses are assumed to be equally weighted within
 # each family)
-pargaterule<-function(gateproc,alpha,independence)
+pargaterule<-function(gateproc,weight, alpha,independence)
 # GATEPROC, List of gatekeeping procedure parameters
 # ALPHA, Global familywise error rate
 # INDEPENDENCE, Boolean indicator (TRUE, Independence condition is imposed; FALSE,
@@ -13,7 +13,7 @@ pargaterule<-function(gateproc,alpha,independence)
     nfams<-length(gateproc)
 
 	# Evaluate decision rules for the multistage parallel gatekeeping procedure
-	gateproc<-pargateeval(gateproc,alpha,independence)
+	gateproc<-pargateeval(gateproc,weight, alpha,independence)
 
 	cat("Hypothesis testing problem\n\n")
 	cat("Global familywise error rate=", alpha, "\n",sep="")
