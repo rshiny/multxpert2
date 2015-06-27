@@ -1,2 +1,18 @@
+<<<<<<< HEAD
 packrat/lib*/
 .Rproj.user
+=======
+# History files
+.Rhistory
+.Rapp.history
+
+# Example code in package build process
+*-Ex.R
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+>>>>>>> 775d509daf13c2ea96b53fda8512fc6106e9e03f
