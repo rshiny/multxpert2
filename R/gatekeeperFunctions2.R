@@ -1,3 +1,6 @@
+
+# customized function: added weight to the parallel gk
+
 # LevelProc is a secondary function which computes the significance level for 
 # the next family for multistage parallel gatekeeping procedures in hypothesis 
 # testing problems with equally weighted null hypotheses
